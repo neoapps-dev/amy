@@ -35,9 +35,13 @@ Requires `gcc` and `libm`. Real-time playback needs SDL2; without it, use `-w` t
 ## Usage
 
 ```sh
-amy <file.amy>          # play via SDL2
-amy -w <file.amy>       # write to <file>.wav
+amy <file.amy>             # play via SDL2
+amy -w <file.amy>          # write to <file>.wav
 amy -w <file.amy> out.wav  # write to out.wav
+amy <file.amy> -l          # loop play
+amy <file.amy> -l 2        # loop twice
+amy <file.amy> -l -w       # write to <file>.wav looped twice
+amy <file.amy> -l 4 -w     # write to <file>.wav looped 4 times
 ```
 
 ## Example
@@ -61,6 +65,6 @@ int    amy_parse(amy_t *a, const char *s, size_t n);
 void   amy_free(amy_t *a);
 double amy_dur(const amy_t *a);
 void   amy_render(const amy_t *a, double t, float *buf, int nchans);
-int    amy_wav(const amy_t *a, const char *path);
-int    amy_play(const amy_t *a);  // requires SDL2
+int    amy_wav(const amy_t *a, const char *path, int repeat);
+int    amy_play(const amy_t *a, int repeat);  // requires SDL2
 ```
