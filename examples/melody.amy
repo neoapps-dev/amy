@@ -1,0 +1,7 @@
+AMY 2
+@title=Melody
+@author=neo
+# bleepy lead (chan 0)
+square 440 0.3 0.2 square 493.88 0.3 0.2 square 523.25 0.3 0.2 square 587.33 0.3 0.2 square 659.25 0.3 0.2 square 698.46 0.3 0.2 square 783.99 0.3 0.4 square 698.46 0.3 0.2 square 659.25 0.3 0.2 square 587.33 0.3 0.2 square 523.25 0.3 0.4 square 493.88 0.3 0.2 square 440 0.3 0.4
+# bass (chan 1)
+sawtooth 110 0.3 0.8 sawtooth 110 0.3 0.8 sawtooth 110 0.3 0.8 sawtooth 110 0.3 0.8 sawtooth 110 0.3 0.8 sawtooth 110 0.3 0.8

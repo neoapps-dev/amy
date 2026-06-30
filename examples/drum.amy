@@ -1,0 +1,12 @@
+AMY 4
+@title=Kick & Snare
+@author=neo
+# kick drum
+sine 60 0.8 0.05 sine 50 0.6 0.05 sine 40 0.4 0.1 silence 0 0 0.3
+sine 60 0.8 0.05 sine 50 0.6 0.05 sine 40 0.4 0.1 silence 0 0 0.3
+# snare
+noise 0 0.5 0.1 silence 0 0 0.3
+noise 0 0.5 0.1 silence 0 0 0.3
+# hi-hat
+noise 0 0.2 0.05 noise 0 0.2 0.05 noise 0 0.2 0.05 noise 0 0.2 0.05
+silence 0 0 0.2 noise 0 0.2 0.05 noise 0 0.2 0.05 noise 0 0.2 0.05 noise 0 0.2 0.05

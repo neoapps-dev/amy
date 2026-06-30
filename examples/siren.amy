@@ -1,0 +1,7 @@
+AMY 1
+@title=Siren
+@author=neo
+# rising and falling siren using triangle wave
+triangle 300 0.5 1.0 triangle 400 0.5 1.0 triangle 500 0.5 1.0
+triangle 600 0.5 1.0 triangle 500 0.5 1.0 triangle 400 0.5 1.0
+triangle 300 0.5 1.0 triangle 200 0.5 1.0 triangle 150 0.5 1.0

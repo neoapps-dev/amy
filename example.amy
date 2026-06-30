@@ -1,0 +1,7 @@
+AMY 3
+@title=Chord C Major
+@author=neo
+sine 261.63 0.3 3.0 sine 329.63 0.3 3.0 sine 392.00 0.3 3.0
+# bass channel
+sawtooth 130.81 0.4 3.0
+square 261.63 0.2 0.5 square 293.66 0.2 0.5 square 329.63 0.2 0.5 square 349.23 0.2 0.5 square 392.00 0.2 0.5 square 440.00 0.2 0.5
