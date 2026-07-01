@@ -22,6 +22,10 @@ typedef struct {
     amy_seg_t *segs;
     int nsegs;
     double dur;
+} amy_voice_t;
+typedef struct {
+    amy_voice_t *voices;
+    int nvoices;
 } amy_chan_t;
 typedef struct {
     int nchans;

@@ -1,0 +1,9 @@
+AMY 2
+@title=Parallel Chord
+@author=neo
+# C Major chord as parallel layers in one channel
+sine 261.63 0.25 4.0
+	sine 329.63 0.25 4.0
+	sine 392.00 0.25 4.0
+# bass on channel 1
+sawtooth 130.81 0.4 4.0

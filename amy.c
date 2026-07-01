@@ -96,7 +96,9 @@ int amy_parse(amy_t *a, const char *s, size_t n)
             continue;
         }
 
-        if (chidx >= a->nchans) continue;
+        int parallel = ln[0] == '\t';
+        int pch = parallel ? chidx - 1 : chidx;
+        if (pch < 0 || pch >= a->nchans) continue;
         int ntoks = 0;
         for (int j = 0; j < lnlen; ) {
             if (ln[j] == ' ' || ln[j] == '\t') { j++; continue; }
@@ -106,10 +108,15 @@ int amy_parse(amy_t *a, const char *s, size_t n)
 
         if (ntoks == 0 || ntoks % 4 != 0) continue;
         int nsegs = ntoks / 4;
-        amy_chan_t *ch = &a->chans[chidx];
-        ch->segs = calloc(nsegs, sizeof(amy_seg_t));
-        if (!ch->segs) continue;
-        ch->nsegs = nsegs;
+        amy_chan_t *ch = &a->chans[pch];
+        int vi = ch->nvoices;
+        void *vtmp = realloc(ch->voices, (vi + 1) * sizeof(amy_voice_t));
+        if (!vtmp) continue;
+        ch->voices = vtmp;
+        ch->nvoices++;
+        ch->voices[vi].segs = calloc(nsegs, sizeof(amy_seg_t));
+        if (!ch->voices[vi].segs) { ch->nvoices--; continue; }
+        ch->voices[vi].nsegs = nsegs;
         int tok = 0;
         double running = 0;
         for (int j = 0; j < lnlen && tok < ntoks; ) {
@@ -121,20 +128,20 @@ int amy_parse(amy_t *a, const char *s, size_t n)
             int sidx = tok / 4;
             if (mod == 0) {
                 int wt = wave_type(ln + st, tlen);
-                ch->segs[sidx].type = wt >= 0 ? (amy_wave_t)wt : AMY_SILENCE;
+                ch->voices[vi].segs[sidx].type = wt >= 0 ? (amy_wave_t)wt : AMY_SILENCE;
             } else if (mod == 1) {
-                ch->segs[sidx].freq = atof(ln + st);
+                ch->voices[vi].segs[sidx].freq = atof(ln + st);
             } else if (mod == 2) {
-                ch->segs[sidx].amp = atof(ln + st);
+                ch->voices[vi].segs[sidx].amp = atof(ln + st);
             } else {
-                ch->segs[sidx].dur = atof(ln + st);
-                ch->segs[sidx].start = running;
-                running += ch->segs[sidx].dur;
+                ch->voices[vi].segs[sidx].dur = atof(ln + st);
+                ch->voices[vi].segs[sidx].start = running;
+                running += ch->voices[vi].segs[sidx].dur;
             }
             tok++;
         }
-        ch->dur = running;
-        chidx++;
+        ch->voices[vi].dur = running;
+        if (!parallel) chidx++;
     }
 
     free(lines);
@@ -144,7 +151,10 @@ int amy_parse(amy_t *a, const char *s, size_t n)
 
 void amy_free(amy_t *a)
 {
-    for (int i = 0; i < a->nchans; i++) free(a->chans[i].segs);
+    for (int i = 0; i < a->nchans; i++) {
+        for (int vi = 0; vi < a->chans[i].nvoices; vi++) free(a->chans[i].voices[vi].segs);
+        free(a->chans[i].voices);
+    }
     free(a->chans);
     for (int i = 0; i < a->nmeta; i++) free(a->meta[i]);
     free(a->meta);
@@ -154,7 +164,7 @@ void amy_free(amy_t *a)
 double amy_dur(const amy_t *a)
 {
     double d = 0;
-    for (int i = 0; i < a->nchans; i++) if (a->chans[i].dur > d) d = a->chans[i].dur;
+    for (int i = 0; i < a->nchans; i++) for (int vi = 0; vi < a->chans[i].nvoices; vi++) if (a->chans[i].voices[vi].dur > d) d = a->chans[i].voices[vi].dur;
     return d;
 }
 
@@ -176,11 +186,14 @@ void amy_render(const amy_t *a, double t, float *buf, int nchans)
     for (int ci = 0; ci < a->nchans; ci++) {
         amy_chan_t *ch = &a->chans[ci];
         double val = 0.0;
-        for (int si = 0; si < ch->nsegs; si++) {
-            amy_seg_t *seg = &ch->segs[si];
-            if (t >= seg->start && t < seg->start + seg->dur) {
-                val = seg->amp * gen(seg->type, seg->freq * (t - seg->start));
-                break;
+        for (int vi = 0; vi < ch->nvoices; vi++) {
+            amy_voice_t *v = &ch->voices[vi];
+            for (int si = 0; si < v->nsegs; si++) {
+                amy_seg_t *seg = &v->segs[si];
+                if (t >= seg->start && t < seg->start + seg->dur) {
+                    val += seg->amp * gen(seg->type, seg->freq * (t - seg->start));
+                    break;
+                }
             }
         }
         for (int oc = 0; oc < nchans; oc++)

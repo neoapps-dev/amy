@@ -1,0 +1,9 @@
+AMY 2
+@title=Thick Lead
+@author=neo
+# channel 0: layered lead - parallel saw, square, and sub
+sawtooth 440 0.2 2.0 sawtooth 493.88 0.2 0.5 sawtooth 523.25 0.2 1.5
+	square 440 0.15 2.0 square 493.88 0.15 0.5 square 523.25 0.15 1.5
+	sine 110 0.3 2.0 sine 110 0.3 0.5 sine 110 0.3 1.5
+# channel 1: steady bass
+sawtooth 110 0.4 4.0

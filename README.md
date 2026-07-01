@@ -9,11 +9,17 @@ AMY <num_channels>
 @key=value
 # comments start with #
 <chan0> <wave> <freq> <amp> <dur>  [<wave> <freq> <amp> <dur> ...]
+	<parallel> <wave> <freq> <amp> <dur>  ...
+	<parallel> <wave> <freq> <amp> <dur>  ...
+	<...>
 <chan1> <wave> <freq> <amp> <dur>  ...
+	<parallel> <wave> <freq> <amp> <dur>  ...
 ...
 ```
 
 Each line after the header is a channel. Segments are space-separated 4-tuples: waveform, frequency (Hz), amplitude (0–1), duration (seconds).
+
+Lines starting with a tab are parallel layers. They play simultaneously with the channel above rather than creating a new channel. Add as many as you like. Though be sure to not fill your RAM hehe.
 
 | Waveform    | Description |
 |-------------|-------------|
