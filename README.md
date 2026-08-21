@@ -1,6 +1,6 @@
 # AMY (Audio Media Yielding)
 
-A tiny, human-readable audio format and player. Write music as plain text. Definitely not named after my girlfriend.
+A tiny, human-readable audio format and player. Write music as plain text. Definitely not named after my ~~girlfriend~~ (we broke up </3).
 
 ## Format
 
